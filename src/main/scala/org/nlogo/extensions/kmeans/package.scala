@@ -1,9 +1,11 @@
 package org.nlogo.extensions
 
-import org.nlogo.agent
-import org.nlogo.agent.Turtle
+
+import java.util.Locale
+
 import org.nlogo.api
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.agent
+import org.nlogo.core.Token
 
 package object kmeans {
 
@@ -14,21 +16,28 @@ package object kmeans {
       .collect { case t: agent.Turtle => t }
       .toArray[agent.Agent]
     new agent.ArrayAgentSet(
-      classOf[agent.Turtle],
-      agents,
-      world.asInstanceOf[agent.World])
+      agents(0).kind,
+      agents.mkString(" "),
+      agents
+      )
   }
 
   def splitAgentSet(
     agentSet: api.AgentSet,
-    rng: MersenneTwisterFast,
+    rng: api.MersenneTwisterFast,
     world: api.World): Seq[api.AgentSet] = {
     val xs = Seq.newBuilder[api.AgentSet]
     val it = agentSet.asInstanceOf[agent.AgentSet].shufflerator(rng)
-    val t = classOf[agent.Turtle]
-    val w = world.asInstanceOf[agent.World]
-    while (it.hasNext)
-      xs += new agent.ArrayAgentSet(t, Array(it.next), w)
+    while (it.hasNext) {
+      val next = it.next
+      xs += new agent.ArrayAgentSet(agentSet.kind, next.toString, Array(next))
+    }
     xs.result
   }
+
+  def canonicalVarName(variable: AnyRef) = variable match {
+    case s: String => s.toUpperCase(Locale.ENGLISH)
+    case t: Token  => t.text.toString.toUpperCase(Locale.ENGLISH)
+  }
+
 }

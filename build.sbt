@@ -1,16 +1,24 @@
-scalaVersion := "2.9.2"
+enablePlugins(org.nlogo.build.NetLogoExtension)
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings",
-                      "-encoding", "us-ascii")
+scalaVersion := "2.12.2"
 
-libraryDependencies ++= Seq(
-  "org.nlogo" % "NetLogoLite" % "5.0.4" from
-    "http://ccl.northwestern.edu/netlogo/5.0.4/NetLogoLite.jar",
-  "net.sf.jung" % "jung-algorithms" % "2.0.1"
-)
+scalaSource in Compile := { baseDirectory.value  / "src" }
+
+javaSource in Compile  := { baseDirectory.value / "src" }
+
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xlint", "-Xfatal-warnings",
+  "-encoding", "us-ascii")
+
+javacOptions ++= Seq("-g", "-deprecation", "-Xlint:all", "-encoding", "us-ascii")
 
 name := "k-means"
 
-NetLogoExtension.settings
+netLogoVersion      := "6.0.2"
 
-NetLogoExtension.classManager := "org.nlogo.extensions.kmeans.KMeansExtension"
+netLogoClassManager := "org.nlogo.extensions.kmeans.KMeansExtension"
+
+netLogoExtName      := "kmeans"
+
+netLogoZipSources   := false
+
+//libraryDependencies += "net.sf.jung" % "jung-algorithms" % "2.1.1"
