@@ -114,9 +114,9 @@ object KMeans {
           setMaxIterations(maxIterations)
           setConvergenceThreshold(convergenceThreshold)
         }
-        Clusterer
-          .cluster(features.asJava, nbClusters)
-          .asScala
+        val res = Clusterer.cluster(features.asJava, nbClusters)
+
+          res.asScala
           .map(c => toTurtleSet(c.keySet.asScala.toSeq, world))
           .toSeq
     }
